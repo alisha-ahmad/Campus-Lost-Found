@@ -1,0 +1,121 @@
+<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Main.Master.cs" Inherits="CampusLostFound.Main" %>
+<!DOCTYPE html>
+<html lang="en">
+<head runat="server">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Campus Lost &amp; Found</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="<%= ResolveUrl("~/shared_style.css") %>" />
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server"></asp:ContentPlaceHolder>
+</head>
+<body>
+<form id="mainForm" runat="server">
+
+    <!-- Sidebar overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar fixed-top app-navbar px-3 d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center gap-3">
+            <button type="button" id="sidebarToggle" class="hamburger-btn" aria-label="Toggle sidebar">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <a class="navbar-brand mb-0" href="<%= ResolveUrl("~/UserDashboard.aspx") %>">
+                Campus <span>L&amp;F</span>
+            </a>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <a href="<%= ResolveUrl("~/Pages/Account/AccountDetails.aspx") %>"
+               class="d-flex align-items-center gap-2 text-decoration-none"
+               title="Account Details">
+                <span class="user-info d-none d-sm-inline">
+                    <asp:Literal ID="litNavbarUserName" runat="server">User</asp:Literal>
+                </span>
+                <div style="width:32px;height:32px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-weight:700;font-size:0.85rem;color:var(--primary);flex-shrink:0;">
+                    <asp:Literal ID="litAvatarInitials" runat="server">U</asp:Literal>
+                </div>
+            </a>
+            <asp:LinkButton ID="lbtnLogout" runat="server" OnClick="lbtnLogout_Click"
+                CssClass="btn btn-sm"
+                style="background:rgba(255,255,255,0.12);color:#fff;border:1px solid rgba(255,255,255,0.22);border-radius:8px;font-size:0.88rem;">
+                <i class="fa-solid fa-right-from-bracket me-1"></i><span class="d-none d-sm-inline">Logout</span>
+            </asp:LinkButton>
+        </div>
+    </nav>
+
+    <!-- Layout -->
+    <div class="app-container">
+
+        <aside id="sidebar" class="sidebar-wrapper">
+            <div class="sidebar-nav">
+                <div class="nav-section-label">Main</div>
+                <a href="<%= ResolveUrl("~/UserDashboard.aspx") %>" class="nav-link">
+                    <i class="fa-solid fa-chart-pie"></i> Dashboard
+                </a>
+
+                <div class="nav-section-label">Items</div>
+                <a href="<%= ResolveUrl("~/Pages/Items/ReportLostItem.aspx") %>" class="nav-link">
+                    <i class="fa-solid fa-triangle-exclamation"></i> Report Lost Item
+                </a>
+                <a href="<%= ResolveUrl("~/Pages/Items/ReportFoundItem.aspx") %>" class="nav-link">
+                    <i class="fa-solid fa-box-archive"></i> Report Found Item
+                </a>
+                <a href="<%= ResolveUrl("~/Pages/Items/SearchItems.aspx") %>" class="nav-link">
+                    <i class="fa-solid fa-magnifying-glass"></i> Browse &amp; Search
+                </a>
+                <a href="<%= ResolveUrl("~/Pages/Items/MyReports.aspx") %>" class="nav-link">
+                    <i class="fa-solid fa-list-check"></i> My Reports
+                </a>
+                <a href="<%= ResolveUrl("~/Pages/Items/MyClaims.aspx") %>" class="nav-link">
+                    <i class="fa-solid fa-hand-holding-heart"></i> My Claims
+                </a>
+
+                <div class="nav-section-label">Communications</div>
+                <a href="<%= ResolveUrl("~/Pages/Messages/Messages.aspx") %>" class="nav-link">
+                    <i class="fa-solid fa-comments"></i> Messages
+                </a>
+                <a href="<%= ResolveUrl("~/Pages/Messages/Notifications.aspx") %>" class="nav-link">
+                    <i class="fa-solid fa-bell"></i> Notifications
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content-fluid">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server"></asp:ContentPlaceHolder>
+        </main>
+
+    </div>
+
+</form>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var toggleBtn = document.getElementById("sidebarToggle");
+        var sidebar   = document.getElementById("sidebar");
+        var overlay   = document.getElementById("sidebarOverlay");
+
+        function openSidebar()  { sidebar.classList.add("show");    overlay.classList.add("show");    }
+        function closeSidebar() { sidebar.classList.remove("show"); overlay.classList.remove("show"); }
+
+        if (toggleBtn) toggleBtn.addEventListener("click", function (e) {
+            sidebar.classList.contains("show") ? closeSidebar() : openSidebar();
+            e.stopPropagation();
+        });
+
+        if (overlay) overlay.addEventListener("click", closeSidebar);
+
+        // Highlight the active sidebar link
+        var currentPath = window.location.pathname.toLowerCase();
+        document.querySelectorAll("#sidebar .nav-link").forEach(function (link) {
+            var href = link.getAttribute("href").toLowerCase();
+            if (currentPath.indexOf(href) !== -1 ||
+                (href.indexOf("userdashboard") !== -1 && currentPath === "/")) {
+                link.classList.add("active");
+            }
+        });
+    });
+</script>
+</body>
+</html>

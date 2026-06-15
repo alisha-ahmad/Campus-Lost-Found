@@ -1,0 +1,12 @@
+.vs/
+.vscode/
+.history/
+bin/
+obj/
+Uploads/*
+Uplaods/.gitkeep
+Packages/
+
+*.user
+*.suo
+*.log
